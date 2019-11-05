@@ -1,7 +1,8 @@
-package com.example.testeappmoove
+package com.example.testeappmoove.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.example.testeappmoove.R
 
 class SearchActivity : AppCompatActivity() {
 

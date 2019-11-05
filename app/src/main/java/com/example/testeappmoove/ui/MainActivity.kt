@@ -1,16 +1,18 @@
-package com.example.testeappmoove
+package com.example.testeappmoove.ui
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.MenuInflater
-import androidx.core.app.ComponentActivity
-import androidx.core.app.ComponentActivity.ExtraData
-import androidx.core.content.ContextCompat.getSystemService
-import android.icu.lang.UCharacter.GraphemeClusterBreak.T
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.example.testeappmoove.R
+import com.example.testeappmoove.service.ApiFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.lang.Exception
 
 
 class MainActivity : AppCompatActivity() {
@@ -18,6 +20,21 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val movieService = ApiFactory.api
+
+        GlobalScope.launch(Dispatchers.Main) {
+            val request = movieService.getPopularMovies()
+            try {
+                val response = request.await()
+                val movies = response.results
+
+                Toast.makeText(this@MainActivity, movies.toString(), Toast.LENGTH_SHORT).show()
+
+            } catch (e: Exception) {
+                Log.e("MainActivity", e.toString())
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
