@@ -3,15 +3,11 @@ package com.example.testeappmoove.ui
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testeappmoove.R
 import com.example.testeappmoove.data.Movie
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.view.*
-import kotlinx.android.synthetic.main.first_movie_item.view.*
 import kotlinx.android.synthetic.main.movie_item.view.*
-import kotlinx.android.synthetic.main.movie_item.view.title
 
 class MoviesAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<MovieViewHolder>() {
 
@@ -44,13 +40,23 @@ class MoviesAdapter(private val movies: List<Movie>) : RecyclerView.Adapter<Movi
         var imageView = holder?.imageView
 
         if (imageView != null) {
-            Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.backdrop_path)
-                .into(imageView)
+
+            if (position == 0) {
+                Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.backdrop_path)
+
+                    .into(imageView)
+            } else {
+                Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.poster_path)
+                    .resize(250, 250)
+                    .into(imageView)
+            }
+
         }
 
     }
 
 }
+
 
 class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     var title = itemView.title
