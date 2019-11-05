@@ -6,9 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.testeappmoove.R
-import com.example.testeappmoove.data.Movie
 import com.example.testeappmoove.data.MovieResponse
 import com.example.testeappmoove.service.ApiFactory
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,10 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-
 class MainActivity : AppCompatActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -42,8 +37,6 @@ class MainActivity : AppCompatActivity() {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
         })
-
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
