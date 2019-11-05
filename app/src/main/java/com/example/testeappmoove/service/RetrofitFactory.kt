@@ -1,13 +1,12 @@
 package com.example.testeappmoove.service
 
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitFactory {
-    private val authInterceptor = Interceptor {chain ->
+    private val authInterceptor = Interceptor { chain ->
         // Adiciona api_key em todas as requisições
         // O correto seria colocar a api_key em um arquivo que não vai para o repositório
 
@@ -29,10 +28,9 @@ object RetrofitFactory {
         .addInterceptor(authInterceptor)
         .build()
 
-    fun retrofit(baseUrl: String) : Retrofit = Retrofit.Builder()
+    fun retrofit(): Retrofit = Retrofit.Builder()
         .client(client)
-        .baseUrl(baseUrl)
-        .addConverterFactory(MoshiConverterFactory.create())
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
+        .baseUrl("https://api.themoviedb.org/3/")
+        .addConverterFactory(GsonConverterFactory.create())
         .build()
 }

@@ -8,10 +8,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.testeappmoove.R
+import com.example.testeappmoove.data.MovieResponse
 import com.example.testeappmoove.service.ApiFactory
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.lang.Exception
 
 
@@ -21,20 +22,19 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val movieService = ApiFactory.api
+        val api = ApiFactory.api
 
-        GlobalScope.launch(Dispatchers.Main) {
-            val request = movieService.getPopularMovies()
-            try {
-                val response = request.await()
-                val movies = response.results
-
-                Toast.makeText(this@MainActivity, movies.toString(), Toast.LENGTH_SHORT).show()
-
-            } catch (e: Exception) {
-                Log.e("MainActivity", e.toString())
+        api.getPopularMovies().enqueue(object : Callback<MovieResponse> {
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                Log.d("Movies", response.body().toString())
             }
-        }
+
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+        })
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
