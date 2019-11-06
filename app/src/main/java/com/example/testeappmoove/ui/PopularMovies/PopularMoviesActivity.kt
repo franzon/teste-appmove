@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
 import com.example.testeappmoove.data.entities.Movie
@@ -24,25 +25,24 @@ class PopularMoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
 
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MoviesAdapter(arrayListOf()) { }
-
         val onClick = { movie: Movie ->
             val intent = Intent(this, MovieDetailsActivity::class.java)
             intent.putExtra("movieId", movie.id)
             startActivity(intent)
         }
 
-        val popularMoviesResponse = MovieRepository().getPopularMovies()
-        popularMoviesResponse.observe(this, Observer {
+        val movieDetailsViewModel =
+            ViewModelProviders.of(this)
+                .get(PopularMoviesViewModel::class.java)
+
+        movieDetailsViewModel.getPopularMovies().observe(this, Observer { movies ->
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
                 adapter =
-                    MoviesAdapter(it.results) { movie -> onClick(movie) }
+                    MoviesAdapter(movies.results) { movie -> onClick(movie) }
             }
         })
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
