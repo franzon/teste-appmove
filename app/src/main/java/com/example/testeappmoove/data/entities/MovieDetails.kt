@@ -6,5 +6,8 @@ data class MovieDetails(
     val backdrop_path: String,
     val title: String,
     val overview: String,
-    var liked: Boolean
+    var liked: Boolean,
+    var vote_average: Double,
+    var original_language: String,
+    var release_date: String
 )
