@@ -1,6 +1,7 @@
 package com.example.testeappmoove.data.network
 
 import com.example.testeappmoove.data.entities.Movie
+import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
@@ -15,7 +16,7 @@ interface MovieApi {
     fun getPopularMovies(): Call<MovieResponse>
 
     @GET("movie/{id}")
-    fun getMovieDetails(@Path("id") id: Int): Call<Movie>
+    fun getMovieDetails(@Path("id") id: Int): Call<MovieDetails>
 
     companion object {
         operator fun invoke(): MovieApi {
