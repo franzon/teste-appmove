@@ -11,6 +11,10 @@ import com.example.testeappmoove.R
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class MovieDetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,8 +35,14 @@ class MovieDetailsActivity : AppCompatActivity() {
             movie_title.text = movie.title
             movie_vote_average.text = movie.vote_average.toString()
             movie_overview.text = movie.overview
-            movie_original_language.text = movie.original_language
-            movie_release_date.text = movie.release_date
+
+            val locale = Locale(movie.original_language)
+            movie_original_language.text = locale.getDisplayLanguage()
+
+            val date = SimpleDateFormat("yyyy-MM-dd").parse(movie.release_date)
+            val newDate = SimpleDateFormat("dd/MM/yyyy").format(date)
+
+            movie_release_date.text = newDate
 
             for (genre in movie.genres) {
                 val chip = Chip(chipGroup.context)

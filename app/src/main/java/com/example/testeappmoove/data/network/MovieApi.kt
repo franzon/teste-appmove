@@ -28,6 +28,7 @@ interface MovieApi {
                 val newUrl = chain.request().url()
                     .newBuilder()
                     .addQueryParameter("api_key", "5bdb76e8bfee733ddafc24d0382e918d")
+                    .addQueryParameter("language", "pt-BR")
                     .build()
 
                 val newRequest = chain.request()
