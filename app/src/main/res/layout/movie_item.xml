@@ -12,7 +12,7 @@
     android:paddingBottom="8dp">
 
 
-    <Button
+    <ImageButton
         android:id="@+id/likeButton"
         android:layout_width="24dp"
         android:layout_height="24dp"

@@ -47,7 +47,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
-    <Button
+    <ImageButton
         android:id="@+id/likeButton"
         android:layout_width="32dp"
         android:layout_height="32dp"
