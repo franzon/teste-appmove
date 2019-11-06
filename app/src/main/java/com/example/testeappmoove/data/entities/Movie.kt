@@ -1,4 +1,4 @@
-package com.example.testeappmoove.data
+package com.example.testeappmoove.data.entities
 
 data class Movie(
     val id: Int,

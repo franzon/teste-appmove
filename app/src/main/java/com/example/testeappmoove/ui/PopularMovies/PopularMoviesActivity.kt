@@ -3,14 +3,14 @@ package com.example.testeappmoove.ui.PopularMovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
-import com.example.testeappmoove.data.Movie
-import com.example.testeappmoove.data.MovieResponse
-import com.example.testeappmoove.service.ApiFactory
+import com.example.testeappmoove.data.entities.Movie
+import com.example.testeappmoove.data.entities.MovieResponse
+import com.example.testeappmoove.data.repositories.MovieRepository
 import com.example.testeappmoove.ui.MovieDetails.MovieDetailsActivity
 import com.example.testeappmoove.ui.SearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
@@ -33,22 +33,16 @@ class PopularMoviesActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        val api = ApiFactory.api
-
-        api.getPopularMovies().enqueue(object : Callback<MovieResponse> {
-            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-                recyclerView.apply {
-                    setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
-                    adapter =
-                        MoviesAdapter(response.body()!!.results) { movie -> onClick(movie) }
-                }
-            }
-
-            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val popularMoviesResponse = MovieRepository().getPopularMovies()
+        popularMoviesResponse.observe(this, Observer {
+            recyclerView.apply {
+                setHasFixedSize(true)
+                layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
+                adapter =
+                    MoviesAdapter(it.results) { movie -> onClick(movie) }
             }
         })
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

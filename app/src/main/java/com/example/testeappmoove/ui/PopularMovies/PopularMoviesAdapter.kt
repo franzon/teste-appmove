@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.testeappmoove.R
-import com.example.testeappmoove.data.Movie
+import com.example.testeappmoove.data.entities.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
