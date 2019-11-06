@@ -8,6 +8,7 @@ import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.testeappmoove.R
+import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
@@ -32,6 +33,15 @@ class MovieDetailsActivity : AppCompatActivity() {
             movie_overview.text = movie.overview
             movie_original_language.text = movie.original_language
             movie_release_date.text = movie.release_date
+
+            for (genre in movie.genres) {
+                val chip = Chip(chipGroup.context)
+
+                chip.text = genre.name
+                chip.isClickable = false
+
+                chipGroup.addView(chip)
+            }
         })
     }
 }
