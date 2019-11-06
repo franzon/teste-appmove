@@ -29,7 +29,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         movieDetailsViewModel.getMovie().observe(this, Observer { movie ->
 
-            Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.poster_path)
+            Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.backdrop_path)
                 .into(imageView)
 
             movie_title.text = movie.title
