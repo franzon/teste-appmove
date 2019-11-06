@@ -3,12 +3,15 @@ package com.example.testeappmoove.ui.PopularMovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
+import com.example.testeappmoove.data.Movie
 import com.example.testeappmoove.data.MovieResponse
 import com.example.testeappmoove.service.ApiFactory
+import com.example.testeappmoove.ui.MovieDetails.MovieDetailsActivity
 import com.example.testeappmoove.ui.SearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
@@ -22,8 +25,13 @@ class PopularMoviesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_popular_movies)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter =
-            MoviesAdapter(arrayListOf())
+        recyclerView.adapter = MoviesAdapter(arrayListOf()) { }
+
+        val onClick = { movie: Movie ->
+            val intent = Intent(this, MovieDetailsActivity::class.java)
+            intent.putExtra("movieId", movie.id)
+            startActivity(intent)
+        }
 
         val api = ApiFactory.api
 
@@ -31,9 +39,9 @@ class PopularMoviesActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 recyclerView.apply {
                     setHasFixedSize(true)
-                    adapter =
-                        MoviesAdapter(response.body()!!.results)
                     layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
+                    adapter =
+                        MoviesAdapter(response.body()!!.results) { movie -> onClick(movie) }
                 }
             }
 

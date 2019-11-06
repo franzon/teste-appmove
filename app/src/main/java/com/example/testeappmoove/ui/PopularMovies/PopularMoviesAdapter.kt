@@ -9,8 +9,8 @@ import com.example.testeappmoove.data.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class MoviesAdapter(private val movies: List<Movie>) :
-    RecyclerView.Adapter<MovieViewHolder>() {
+class MoviesAdapter(private val movies: List<Movie>, val clickListener: (Movie) -> Unit) :
+    RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     override fun getItemCount() = movies.size
 
@@ -61,11 +61,18 @@ class MoviesAdapter(private val movies: List<Movie>) :
             notifyItemChanged(position)
         }
     }
+
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        var title = itemView.title
+        var imageView = itemView.imageView
+        var overview = itemView.overview
+        var likeButton = itemView.likeButton
+
+        init {
+            itemView.setOnClickListener {
+                clickListener(movies[adapterPosition])
+            }
+        }
+    }
 }
 
-class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var title = itemView.title
-    var imageView = itemView.imageView
-    var overview = itemView.overview
-    var likeButton = itemView.likeButton
-}
