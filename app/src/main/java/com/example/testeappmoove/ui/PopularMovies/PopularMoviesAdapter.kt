@@ -1,4 +1,4 @@
-package com.example.testeappmoove.ui
+package com.example.testeappmoove.ui.PopularMovies
 
 import android.view.LayoutInflater
 import android.view.View

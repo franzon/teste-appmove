@@ -1,4 +1,4 @@
-package com.example.testeappmoove.ui
+package com.example.testeappmoove.ui.PopularMovies
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -9,18 +9,21 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
 import com.example.testeappmoove.data.MovieResponse
 import com.example.testeappmoove.service.ApiFactory
-import kotlinx.android.synthetic.main.activity_main.*
+import com.example.testeappmoove.ui.SearchActivity
+import kotlinx.android.synthetic.main.activity_popular_movies.*
+
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
+class PopularMoviesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_popular_movies)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = MoviesAdapter(arrayListOf())
+        recyclerView.adapter =
+            MoviesAdapter(arrayListOf())
 
         val api = ApiFactory.api
 
@@ -28,8 +31,9 @@ class MainActivity : AppCompatActivity() {
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
                 recyclerView.apply {
                     setHasFixedSize(true)
-                    adapter = MoviesAdapter(response.body()!!.results)
-                    layoutManager = LinearLayoutManager(this@MainActivity)
+                    adapter =
+                        MoviesAdapter(response.body()!!.results)
+                    layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
                 }
             }
 
