@@ -10,6 +10,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MovieApi {
     @GET("movie/popular")
@@ -17,6 +18,9 @@ interface MovieApi {
 
     @GET("movie/{id}")
     fun getMovieDetails(@Path("id") id: Int): Call<MovieDetails>
+
+    @GET("search/movie")
+    fun searchMovies(@Query("query") query: String) : Call<MovieResponse>
 
     companion object {
         operator fun invoke(): MovieApi {

@@ -10,15 +10,9 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
 import com.example.testeappmoove.data.entities.Movie
-import com.example.testeappmoove.data.entities.MovieResponse
-import com.example.testeappmoove.data.repositories.MovieRepository
 import com.example.testeappmoove.ui.MovieDetails.MovieDetailsActivity
-import com.example.testeappmoove.ui.SearchActivity
+import com.example.testeappmoove.ui.MovieSearch.MovieSearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
-
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
 class PopularMoviesActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +48,7 @@ class PopularMoviesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.search -> {
-                val intent = Intent(this, SearchActivity::class.java)
+                val intent = Intent(this, MovieSearchActivity::class.java)
                 startActivity(intent)
             }
         }

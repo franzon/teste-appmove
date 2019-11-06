@@ -1,9 +1,7 @@
 package com.example.testeappmoove.data.repositories
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.example.testeappmoove.data.entities.Movie
 import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import com.example.testeappmoove.data.network.MovieApi
@@ -19,11 +17,9 @@ class MovieRepository {
     fun getPopularMovies(): LiveData<MovieResponse> {
         val popularMoviesResponse = MutableLiveData<MovieResponse>()
 
-
-
         api.getPopularMovies().enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
-                // TODO
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
@@ -50,5 +46,21 @@ class MovieRepository {
         })
 
         return movieDetailsResponse
+    }
+
+    fun searchMovies(query: String): LiveData<MovieResponse> {
+        val moviesResponse = MutableLiveData<MovieResponse>()
+
+        api.searchMovies(query).enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+                moviesResponse.value = response.body()
+            }
+        })
+
+        return moviesResponse
     }
 }
