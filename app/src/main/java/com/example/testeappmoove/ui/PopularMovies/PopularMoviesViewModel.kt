@@ -12,6 +12,8 @@ class PopularMoviesViewModel(private val movieRepository: MovieRepository) : Vie
     }
 
     fun likeMovie(movieId: Int) = movieRepository.likeMovie(movieId)
+
+    fun loadMoreMovies(page: Int)  = movieRepository.loadMoreMovies(page)
 }
 
 class PopularMoviesViewModelFactory(private val movieRepository: MovieRepository) :

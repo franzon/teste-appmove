@@ -14,13 +14,13 @@ import retrofit2.http.Query
 
 interface MovieApi {
     @GET("movie/popular")
-    fun getPopularMovies(): Call<MovieResponse>
+    fun getPopularMovies(@Query("page") page: Int = 1): Call<MovieResponse>
 
     @GET("movie/{id}")
     fun getMovieDetails(@Path("id") id: Int): Call<MovieDetails>
 
     @GET("search/movie")
-    fun searchMovies(@Query("query") query: String) : Call<MovieResponse>
+    fun searchMovies(@Query("query") query: String): Call<MovieResponse>
 
     companion object {
         operator fun invoke(): MovieApi {

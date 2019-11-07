@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.example.testeappmoove.data.dao.LikeDao
 import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.LikedMovie
+import com.example.testeappmoove.data.entities.Movie
 import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import com.example.testeappmoove.data.network.MovieApi
@@ -41,6 +42,38 @@ class MovieRepository(private val likeDao: LikeDao) {
                 }
 
                 _popularMovies.value = response.body()
+            }
+        })
+    }
+
+    fun loadMoreMovies(page: Int) {
+        api.getPopularMovies(page).enqueue(object : Callback<MovieResponse> {
+            override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
+
+                val likes = likeDao.all()
+                val likedIds = likes.map { it.id }
+
+                val body = response.body()
+
+                for (movie in body?.results!!) {
+                    movie.liked = likedIds.contains(movie.id)
+                }
+
+                val results = response.body()?.results
+                val current = popularMovies.value?.results
+
+                Log.d("Loading", "Carregando mais filmes")
+
+                current?.let {
+                    results?.let {
+                        val newResponse = MovieResponse(current.plus(results))
+                        _popularMovies.value = newResponse
+                    }
+                }
             }
         })
     }

@@ -10,6 +10,7 @@ import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testeappmoove.R
 import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.Movie
@@ -19,6 +20,8 @@ import com.example.testeappmoove.ui.MovieSearch.MovieSearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class PopularMoviesActivity : AppCompatActivity() {
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
@@ -27,6 +30,8 @@ class PopularMoviesActivity : AppCompatActivity() {
         val database = AppDatabase.getInstance(this)
         val likeDao = database?.likeDao()
         val movieRepository = MovieRepository.getInstance(likeDao!!)
+
+        val linearLayoutManager = LinearLayoutManager(this@PopularMoviesActivity)
 
         movieRepository?.let {
             val popularMoviesViewModel =
@@ -44,12 +49,40 @@ class PopularMoviesActivity : AppCompatActivity() {
                 popularMoviesViewModel.likeMovie(movie.id)
             }
 
+            var loading = true
+            var page = 1
+
+
+            // https://stackoverflow.com/questions/26543131/how-to-implement-endless-list-with-recyclerview
+            // Código adaptado de Java para Kotlin
+
+            recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                    if (dy > 0) {
+                        val visibleItemCount = linearLayoutManager.childCount
+                        val totalItemCount = linearLayoutManager.itemCount
+                        val pastVisiblesItems =
+                            linearLayoutManager.findFirstCompletelyVisibleItemPosition()
+
+                        if (loading) {
+                            if ((visibleItemCount + pastVisiblesItems) >= totalItemCount) {
+                                progressBarPaging.isGone = false
+                                page++
+                                loading = false
+                                popularMoviesViewModel.loadMoreMovies(page)
+                            }
+                        }
+                    }
+                }
+            })
+
+
             popularMoviesViewModel.popularMovies.observe(this, Observer { movies ->
 
                 val recyclerViewState = recyclerView.getLayoutManager()?.onSaveInstanceState();
                 recyclerView.apply {
                     setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
+                    layoutManager = linearLayoutManager
                     adapter =
                         MoviesAdapter(
                             movies.results,
@@ -59,6 +92,8 @@ class PopularMoviesActivity : AppCompatActivity() {
                 recyclerView.getLayoutManager()?.onRestoreInstanceState(recyclerViewState);
 
                 progressBarPopularMovies.isGone = true
+                loading = true
+                progressBarPaging.isGone = true
             })
         }
     }
