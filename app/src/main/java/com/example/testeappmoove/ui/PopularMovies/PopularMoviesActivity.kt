@@ -49,6 +49,10 @@ class PopularMoviesActivity : AppCompatActivity() {
                 popularMoviesViewModel.likeMovie(movie.id)
             }
 
+            swipeRefresh.setOnRefreshListener {
+              popularMoviesViewModel.loadPopularMovies()
+            }
+
             var loading = true
             var page = 1
 
@@ -94,6 +98,7 @@ class PopularMoviesActivity : AppCompatActivity() {
                 progressBarPopularMovies.isGone = true
                 loading = true
                 progressBarPaging.isGone = true
+                swipeRefresh.isRefreshing = false
             })
         }
     }
