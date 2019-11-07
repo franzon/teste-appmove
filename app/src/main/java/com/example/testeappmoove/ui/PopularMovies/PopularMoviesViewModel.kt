@@ -5,7 +5,11 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.testeappmoove.data.repositories.MovieRepository
 
 class PopularMoviesViewModel(private val movieRepository: MovieRepository) : ViewModel() {
-    fun getPopularMovies() = movieRepository.getPopularMovies()
+    val popularMovies = movieRepository.popularMovies
+
+    init {
+        movieRepository.loadPopularMovies()
+    }
 
     fun likeMovie(movieId: Int) = movieRepository.likeMovie(movieId)
 }

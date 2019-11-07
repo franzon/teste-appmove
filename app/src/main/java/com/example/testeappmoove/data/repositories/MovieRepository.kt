@@ -1,6 +1,7 @@
 package com.example.testeappmoove.data.repositories
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.testeappmoove.data.dao.LikeDao
@@ -18,9 +19,11 @@ class MovieRepository(private val likeDao: LikeDao) {
     // TODO: utilizar dependency injection
     val api = MovieApi()
 
-    fun getPopularMovies(): LiveData<MovieResponse> {
-        val popularMoviesResponse = MutableLiveData<MovieResponse>()
+    private val _popularMovies = MutableLiveData<MovieResponse>()
+    val popularMovies: LiveData<MovieResponse>
+        get() = _popularMovies
 
+    fun loadPopularMovies() {
         api.getPopularMovies().enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
@@ -37,11 +40,9 @@ class MovieRepository(private val likeDao: LikeDao) {
                     movie.liked = likedIds.contains(movie.id)
                 }
 
-                popularMoviesResponse.value = response.body()
+                _popularMovies.value = response.body()
             }
         })
-
-        return popularMoviesResponse
     }
 
     fun getMovieDetails(movieId: Int): LiveData<MovieDetails> {
@@ -88,10 +89,32 @@ class MovieRepository(private val likeDao: LikeDao) {
         val likes = likeDao.all()
         val likedIds = likes.map { it.id }
 
+        val newPopularMovies = _popularMovies.value
+        val movie = newPopularMovies?.results?.find { it.id == movieId }
+        
         if (likedIds.contains(movieId)) {
             likeDao.delete(LikedMovie(movieId))
+            movie?.liked = false
         } else {
             likeDao.insert(LikedMovie(movieId))
+            movie?.liked = true
+        }
+
+        _popularMovies.value = newPopularMovies
+    }
+
+    companion object {
+        private var INSTANCE: MovieRepository? = null
+
+        fun getInstance(likeDao: LikeDao): MovieRepository? {
+            if (INSTANCE == null) {
+                INSTANCE = MovieRepository(likeDao)
+            }
+            return INSTANCE
+        }
+
+        fun destroyInstance() {
+            INSTANCE = null
         }
     }
 }

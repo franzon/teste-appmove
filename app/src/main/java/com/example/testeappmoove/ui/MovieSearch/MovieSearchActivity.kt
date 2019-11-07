@@ -24,37 +24,38 @@ class MovieSearchActivity : AppCompatActivity() {
 
         val database = AppDatabase.getInstance(this)
         val likeDao = database?.likeDao()
-        val movieRepository = MovieRepository(likeDao!!)
+        val movieRepository = MovieRepository.getInstance(likeDao!!)
 
-        val movieSearchViewModel =
-            ViewModelProviders.of(this, MovieSearchActivityViewModelFactory( movieRepository))
-                .get(MovieSearchActivityViewModel::class.java)
+        movieRepository?.let {
+            val movieSearchViewModel =
+                ViewModelProviders.of(this, MovieSearchActivityViewModelFactory(movieRepository))
+                    .get(MovieSearchActivityViewModel::class.java)
 
-        val onClick = { movie: Movie ->
-            val intent = Intent(this, MovieDetailsActivity::class.java)
-            intent.putExtra("movieId", movie.id)
-            startActivity(intent)
-        }
+            val onClick = { movie: Movie ->
+                val intent = Intent(this, MovieDetailsActivity::class.java)
+                intent.putExtra("movieId", movie.id)
+                startActivity(intent)
+            }
 
 
-        search.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
+            search.setOnEditorActionListener { v, actionId, event ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
 
-                movieSearchViewModel.searchMovies(search.text.toString()).observe(this, Observer {
-                    recyclerView.apply {
-                        setHasFixedSize(true)
-                        layoutManager = LinearLayoutManager(this@MovieSearchActivity)
-                        adapter =
-                            MovieSearchAdapter(it.results) { movie -> onClick(movie) }
-                    }
-                })
+                    movieSearchViewModel.searchMovies(search.text.toString())
+                        .observe(this, Observer {
+                            recyclerView.apply {
+                                setHasFixedSize(true)
+                                layoutManager = LinearLayoutManager(this@MovieSearchActivity)
+                                adapter =
+                                    MovieSearchAdapter(it.results) { movie -> onClick(movie) }
+                            }
+                        })
 
-                true
-            } else {
-                false
+                    true
+                } else {
+                    false
+                }
             }
         }
-
-
     }
 }

@@ -25,36 +25,40 @@ class PopularMoviesActivity : AppCompatActivity() {
 
         val database = AppDatabase.getInstance(this)
         val likeDao = database?.likeDao()
-        val movieRepository = MovieRepository(likeDao!!)
+            val movieRepository = MovieRepository.getInstance(likeDao!!)
 
-        val popularMoviesViewModel =
-            ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
-                .get(PopularMoviesViewModel::class.java)
-
-
-        val onClick = { movie: Movie ->
-            val intent = Intent(this, MovieDetailsActivity::class.java)
-            intent.putExtra("movieId", movie.id)
-            startActivity(intent)
-        }
-
-        val onLike = { movie: Movie ->
-            popularMoviesViewModel.likeMovie(movie.id)
-        }
+            movieRepository?.let {
+            val popularMoviesViewModel =
+                ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
+                    .get(PopularMoviesViewModel::class.java)
 
 
-
-        popularMoviesViewModel.getPopularMovies().observe(this, Observer { movies ->
-            recyclerView.apply {
-                setHasFixedSize(true)
-                layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
-                adapter =
-                    MoviesAdapter(
-                        movies.results,
-                        clickListener = { movie -> onClick(movie) },
-                        likeListener = { movie -> onLike(movie) })
+            val onClick = { movie: Movie ->
+                val intent = Intent(this, MovieDetailsActivity::class.java)
+                intent.putExtra("movieId", movie.id)
+                startActivity(intent)
             }
-        })
+
+            val onLike = { movie: Movie ->
+                popularMoviesViewModel.likeMovie(movie.id)
+            }
+
+            popularMoviesViewModel.popularMovies.observe(this, Observer { movies ->
+
+                val recyclerViewState = recyclerView.getLayoutManager()?.onSaveInstanceState();
+                recyclerView.apply {
+                    setHasFixedSize(true)
+                    layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
+                    adapter =
+                        MoviesAdapter(
+                            movies.results,
+                            clickListener = { movie -> onClick(movie) },
+                            likeListener = { movie -> onLike(movie) })
+                }
+                recyclerView.getLayoutManager()?.onRestoreInstanceState(recyclerViewState);
+
+            })
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
