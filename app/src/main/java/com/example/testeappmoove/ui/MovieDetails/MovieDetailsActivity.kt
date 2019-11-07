@@ -2,9 +2,7 @@ package com.example.testeappmoove.ui.MovieDetails
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.DataBindingUtil.setContentView
+import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.testeappmoove.R
@@ -14,8 +12,6 @@ import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class MovieDetailsActivity : AppCompatActivity() {
@@ -50,6 +46,8 @@ class MovieDetailsActivity : AppCompatActivity() {
                 }
             })
 
+            progressBarMovieDetails.isGone = false
+
             movieDetailsViewModel.getMovie().observe(this, Observer { movie ->
 
                 movieDetailsViewModel.liked.value = movie.liked
@@ -78,6 +76,8 @@ class MovieDetailsActivity : AppCompatActivity() {
 
                     chipGroup.addView(chip)
                 }
+
+                progressBarMovieDetails.isGone = true
             })
         }
     }

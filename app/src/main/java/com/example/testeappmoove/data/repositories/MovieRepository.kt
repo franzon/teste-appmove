@@ -91,7 +91,7 @@ class MovieRepository(private val likeDao: LikeDao) {
 
         val newPopularMovies = _popularMovies.value
         val movie = newPopularMovies?.results?.find { it.id == movieId }
-        
+
         if (likedIds.contains(movieId)) {
             likeDao.delete(LikedMovie(movieId))
             movie?.liked = false

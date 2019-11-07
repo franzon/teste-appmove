@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,9 +26,9 @@ class PopularMoviesActivity : AppCompatActivity() {
 
         val database = AppDatabase.getInstance(this)
         val likeDao = database?.likeDao()
-            val movieRepository = MovieRepository.getInstance(likeDao!!)
+        val movieRepository = MovieRepository.getInstance(likeDao!!)
 
-            movieRepository?.let {
+        movieRepository?.let {
             val popularMoviesViewModel =
                 ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
                     .get(PopularMoviesViewModel::class.java)
@@ -57,6 +58,7 @@ class PopularMoviesActivity : AppCompatActivity() {
                 }
                 recyclerView.getLayoutManager()?.onRestoreInstanceState(recyclerViewState);
 
+                progressBarPopularMovies.isGone = true
             })
         }
     }

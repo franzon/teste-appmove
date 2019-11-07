@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.inputmethod.EditorInfo
+import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +42,8 @@ class MovieSearchActivity : AppCompatActivity() {
             search.setOnEditorActionListener { v, actionId, event ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
 
+                    progressBarSearch.isGone = false
+
                     movieSearchViewModel.searchMovies(search.text.toString())
                         .observe(this, Observer {
                             recyclerView.apply {
@@ -49,6 +52,8 @@ class MovieSearchActivity : AppCompatActivity() {
                                 adapter =
                                     MovieSearchAdapter(it.results) { movie -> onClick(movie) }
                             }
+
+                            progressBarSearch.isGone = true
                         })
 
                     true
