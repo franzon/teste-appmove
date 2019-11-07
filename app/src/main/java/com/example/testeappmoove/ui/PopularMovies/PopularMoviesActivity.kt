@@ -27,13 +27,10 @@ class PopularMoviesActivity : AppCompatActivity() {
         val likeDao = database?.likeDao()
         val movieRepository = MovieRepository(likeDao!!)
 
-        val movieSearchViewModel =
+        val popularMoviesViewModel =
             ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
                 .get(PopularMoviesViewModel::class.java)
 
-        val movieDetailsViewModel =
-            ViewModelProviders.of(this)
-                .get(PopularMoviesViewModel::class.java)
 
         val onClick = { movie: Movie ->
             val intent = Intent(this, MovieDetailsActivity::class.java)
@@ -42,12 +39,12 @@ class PopularMoviesActivity : AppCompatActivity() {
         }
 
         val onLike = { movie: Movie ->
-            Log.d("Like", movie.toString())
+            popularMoviesViewModel.likeMovie(movie.id)
         }
 
 
 
-        movieDetailsViewModel.getPopularMovies().observe(this, Observer { movies ->
+        popularMoviesViewModel.getPopularMovies().observe(this, Observer { movies ->
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(this@PopularMoviesActivity)

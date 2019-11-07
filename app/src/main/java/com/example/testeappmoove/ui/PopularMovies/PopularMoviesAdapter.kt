@@ -61,8 +61,8 @@ class MoviesAdapter(
         }
 
         holder.likeButton.setOnClickListener {
-//            movie.liked = !movie.liked
-//            notifyItemChanged(position)
+            movie.liked = !movie.liked
+            notifyItemChanged(position)
             likeListener(movies[position])
         }
     }

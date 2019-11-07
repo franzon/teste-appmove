@@ -33,10 +33,30 @@ class MovieDetailsActivity : AppCompatActivity() {
             ViewModelProviders.of(this, MovieDetailsViewModelFactory(movieId, movieRepository))
                 .get(MovieDetailsViewModel::class.java)
 
+
+
+        imageButton.setOnClickListener {
+            movieDetailsViewModel.liked?.let {
+                movieDetailsViewModel.liked.value = it.value?.not()
+            }
+            movieDetailsViewModel.likeMovie(movieId)
+        }
+
+        movieDetailsViewModel.liked.observe(this, Observer { liked ->
+            if (liked) {
+                imageButton.setBackgroundResource(R.drawable.ic_favorite_filled)
+            } else {
+                imageButton.setBackgroundResource(R.drawable.ic_favorite)
+            }
+        })
+
         movieDetailsViewModel.getMovie().observe(this, Observer { movie ->
+
+            movieDetailsViewModel.liked.value = movie.liked
 
             Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.backdrop_path)
                 .into(imageView)
+
 
             movie_title.text = movie.title
             movie_vote_average.text = movie.vote_average.toString()

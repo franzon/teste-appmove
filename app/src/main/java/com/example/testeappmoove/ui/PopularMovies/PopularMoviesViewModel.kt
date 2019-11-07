@@ -6,6 +6,8 @@ import com.example.testeappmoove.data.repositories.MovieRepository
 
 class PopularMoviesViewModel(private val movieRepository: MovieRepository) : ViewModel() {
     fun getPopularMovies() = movieRepository.getPopularMovies()
+
+    fun likeMovie(movieId: Int) = movieRepository.likeMovie(movieId)
 }
 
 class PopularMoviesViewModelFactory(private val movieRepository: MovieRepository) :

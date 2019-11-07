@@ -2,6 +2,7 @@ package com.example.testeappmoove.ui.MovieDetails
 
 import android.app.Application
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.testeappmoove.data.entities.MovieDetails
@@ -12,8 +13,12 @@ class MovieDetailsViewModel(
     private val movieRepository: MovieRepository
 ) : ViewModel() {
 
+    val liked = MutableLiveData<Boolean>(false)
+
     fun getMovie() = movieRepository
         .getMovieDetails(movieId)
+
+    fun likeMovie(movieId: Int) = movieRepository.likeMovie(movieId)
 }
 
 // Utilizando Factory para passar o id do filme como parâmetro do ViewModel

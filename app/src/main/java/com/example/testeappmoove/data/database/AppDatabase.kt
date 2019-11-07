@@ -25,7 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                         context.applicationContext,
                         AppDatabase::class.java,
                         "likes.db"
-                    ).build()
+                    ).allowMainThreadQueries().build()
                 }
             }
             return INSTANCE
