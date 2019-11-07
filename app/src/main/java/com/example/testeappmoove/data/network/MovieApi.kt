@@ -1,6 +1,5 @@
 package com.example.testeappmoove.data.network
 
-import com.example.testeappmoove.data.entities.Movie
 import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import okhttp3.Interceptor
@@ -22,6 +21,7 @@ interface MovieApi {
     @GET("search/movie")
     fun searchMovies(@Query("query") query: String): Call<MovieResponse>
 
+    // Singleton
     companion object {
         operator fun invoke(): MovieApi {
 

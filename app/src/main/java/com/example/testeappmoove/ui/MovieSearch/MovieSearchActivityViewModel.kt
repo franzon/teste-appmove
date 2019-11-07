@@ -1,7 +1,7 @@
 package com.example.testeappmoove.ui.MovieSearch
 
-import androidx.lifecycle.*
-import com.example.testeappmoove.data.entities.MovieResponse
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.example.testeappmoove.data.repositories.MovieRepository
 
 class MovieSearchActivityViewModel(private val movieRepository: MovieRepository) : ViewModel() {

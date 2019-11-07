@@ -1,6 +1,5 @@
 package com.example.testeappmoove.data.dao
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.example.testeappmoove.data.entities.LikedMovie
 

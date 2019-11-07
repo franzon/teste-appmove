@@ -1,13 +1,10 @@
 package com.example.testeappmoove.data.repositories
 
-import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.testeappmoove.data.dao.LikeDao
-import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.LikedMovie
-import com.example.testeappmoove.data.entities.Movie
 import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import com.example.testeappmoove.data.network.MovieApi
@@ -24,6 +21,7 @@ class MovieRepository(private val likeDao: LikeDao) {
     val popularMovies: LiveData<MovieResponse>
         get() = _popularMovies
 
+    // Carrega os filmes populares
     fun loadPopularMovies() {
         api.getPopularMovies().enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
@@ -31,7 +29,6 @@ class MovieRepository(private val likeDao: LikeDao) {
             }
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-
                 val likes = likeDao.all()
                 val likedIds = likes.map { it.id }
 
@@ -46,6 +43,7 @@ class MovieRepository(private val likeDao: LikeDao) {
         })
     }
 
+    // Carrega mais filmes e concatena na lista
     fun loadMoreMovies(page: Int) {
         api.getPopularMovies(page).enqueue(object : Callback<MovieResponse> {
             override fun onFailure(call: Call<MovieResponse>, t: Throwable) {
@@ -53,7 +51,6 @@ class MovieRepository(private val likeDao: LikeDao) {
             }
 
             override fun onResponse(call: Call<MovieResponse>, response: Response<MovieResponse>) {
-
                 val likes = likeDao.all()
                 val likedIds = likes.map { it.id }
 
@@ -78,8 +75,8 @@ class MovieRepository(private val likeDao: LikeDao) {
         })
     }
 
+    // Retorna os detalhes de um filme pelo id
     fun getMovieDetails(movieId: Int): LiveData<MovieDetails> {
-
         val movieDetailsResponse = MutableLiveData<MovieDetails>()
 
         api.getMovieDetails(movieId).enqueue(object : Callback<MovieDetails> {
@@ -102,6 +99,7 @@ class MovieRepository(private val likeDao: LikeDao) {
         return movieDetailsResponse
     }
 
+    // Busca por filmes
     fun searchMovies(query: String): LiveData<MovieResponse> {
         val moviesResponse = MutableLiveData<MovieResponse>()
 
@@ -118,6 +116,7 @@ class MovieRepository(private val likeDao: LikeDao) {
         return moviesResponse
     }
 
+    // Favorita ou remove like de um filme
     fun likeMovie(movieId: Int) {
         val likes = likeDao.all()
         val likedIds = likes.map { it.id }
@@ -136,6 +135,7 @@ class MovieRepository(private val likeDao: LikeDao) {
         _popularMovies.value = newPopularMovies
     }
 
+    // Singleton
     companion object {
         private var INSTANCE: MovieRepository? = null
 

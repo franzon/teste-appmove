@@ -27,6 +27,8 @@ class MoviesAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
+
+        // Se for o primeiro item, renderiza um layout diferente
         if (viewType == 0) {
             val view =
                 LayoutInflater.from(parent.context)

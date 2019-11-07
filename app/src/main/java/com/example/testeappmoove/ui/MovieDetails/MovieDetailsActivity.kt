@@ -1,7 +1,7 @@
 package com.example.testeappmoove.ui.MovieDetails
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -27,18 +27,18 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             val movieId = intent.getIntExtra("movieId", -1)
 
-            val movieDetailsViewModel =
+            val viewModel =
                 ViewModelProviders.of(this, MovieDetailsViewModelFactory(movieId, movieRepository))
                     .get(MovieDetailsViewModel::class.java)
 
             imageButton.setOnClickListener {
-                movieDetailsViewModel.liked?.let {
-                    movieDetailsViewModel.liked.value = it.value?.not()
+                viewModel.liked?.let {
+                    viewModel.liked.value = it.value?.not()
                 }
-                movieDetailsViewModel.likeMovie(movieId)
+                viewModel.likeMovie(movieId)
             }
 
-            movieDetailsViewModel.liked.observe(this, Observer { liked ->
+            viewModel.liked.observe(this, Observer { liked ->
                 if (liked) {
                     imageButton.setBackgroundResource(R.drawable.ic_favorite_filled)
                 } else {
@@ -48,13 +48,12 @@ class MovieDetailsActivity : AppCompatActivity() {
 
             progressBarMovieDetails.isGone = false
 
-            movieDetailsViewModel.getMovie().observe(this, Observer { movie ->
+            viewModel.getMovie().observe(this, Observer { movie ->
 
-                movieDetailsViewModel.liked.value = movie.liked
+                viewModel.liked.value = movie.liked
 
                 Picasso.get().load("https://image.tmdb.org/t/p/w500/" + movie.backdrop_path)
                     .into(imageView)
-
 
                 movie_title.text = movie.title
                 movie_vote_average.text = movie.vote_average.toString()

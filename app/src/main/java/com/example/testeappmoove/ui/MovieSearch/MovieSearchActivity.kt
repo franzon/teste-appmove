@@ -3,7 +3,6 @@ package com.example.testeappmoove.ui.MovieSearch
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.inputmethod.EditorInfo
 import androidx.core.view.isGone
 import androidx.lifecycle.Observer
@@ -28,7 +27,7 @@ class MovieSearchActivity : AppCompatActivity() {
         val movieRepository = MovieRepository.getInstance(likeDao!!)
 
         movieRepository?.let {
-            val movieSearchViewModel =
+            val viewModel =
                 ViewModelProviders.of(this, MovieSearchActivityViewModelFactory(movieRepository))
                     .get(MovieSearchActivityViewModel::class.java)
 
@@ -44,7 +43,7 @@ class MovieSearchActivity : AppCompatActivity() {
 
                     progressBarSearch.isGone = false
 
-                    movieSearchViewModel.searchMovies(search.text.toString())
+                    viewModel.searchMovies(search.text.toString())
                         .observe(this, Observer {
                             recyclerView.apply {
                                 setHasFixedSize(true)

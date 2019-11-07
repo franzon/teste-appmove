@@ -1,11 +1,10 @@
 package com.example.testeappmoove.ui.PopularMovies
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isGone
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -20,12 +19,9 @@ import com.example.testeappmoove.ui.MovieSearch.MovieSearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
 
 class PopularMoviesActivity : AppCompatActivity() {
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
-
 
         val database = AppDatabase.getInstance(this)
         val likeDao = database?.likeDao()
@@ -34,10 +30,9 @@ class PopularMoviesActivity : AppCompatActivity() {
         val linearLayoutManager = LinearLayoutManager(this@PopularMoviesActivity)
 
         movieRepository?.let {
-            val popularMoviesViewModel =
+            val viewModel =
                 ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
                     .get(PopularMoviesViewModel::class.java)
-
 
             val onClick = { movie: Movie ->
                 val intent = Intent(this, MovieDetailsActivity::class.java)
@@ -46,11 +41,11 @@ class PopularMoviesActivity : AppCompatActivity() {
             }
 
             val onLike = { movie: Movie ->
-                popularMoviesViewModel.likeMovie(movie.id)
+                viewModel.likeMovie(movie.id)
             }
 
             swipeRefresh.setOnRefreshListener {
-              popularMoviesViewModel.loadPopularMovies()
+                viewModel.loadPopularMovies()
             }
 
             var loading = true
@@ -73,7 +68,7 @@ class PopularMoviesActivity : AppCompatActivity() {
                                 progressBarPaging.isGone = false
                                 page++
                                 loading = false
-                                popularMoviesViewModel.loadMoreMovies(page)
+                                viewModel.loadMoreMovies(page)
                             }
                         }
                     }
@@ -81,8 +76,7 @@ class PopularMoviesActivity : AppCompatActivity() {
             })
 
 
-            popularMoviesViewModel.popularMovies.observe(this, Observer { movies ->
-
+            viewModel.popularMovies.observe(this, Observer { movies ->
                 val recyclerViewState = recyclerView.getLayoutManager()?.onSaveInstanceState();
                 recyclerView.apply {
                     setHasFixedSize(true)
