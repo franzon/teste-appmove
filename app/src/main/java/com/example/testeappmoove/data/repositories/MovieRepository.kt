@@ -1,7 +1,10 @@
 package com.example.testeappmoove.data.repositories
 
+import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.testeappmoove.data.dao.LikeDao
+import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.MovieDetails
 import com.example.testeappmoove.data.entities.MovieResponse
 import com.example.testeappmoove.data.network.MovieApi
@@ -9,7 +12,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MovieRepository {
+class MovieRepository(private val likeDao: LikeDao) {
 
     // TODO: utilizar dependency injection
     val api = MovieApi()
@@ -41,7 +44,6 @@ class MovieRepository {
 
             override fun onResponse(call: Call<MovieDetails>, response: Response<MovieDetails>) {
                 movieDetailsResponse.value = response.body()
-
             }
         })
 

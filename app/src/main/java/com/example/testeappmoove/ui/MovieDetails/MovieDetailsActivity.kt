@@ -8,6 +8,8 @@ import androidx.databinding.DataBindingUtil.setContentView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.testeappmoove.R
+import com.example.testeappmoove.data.database.AppDatabase
+import com.example.testeappmoove.data.repositories.MovieRepository
 import com.google.android.material.chip.Chip
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_movie_details.*
@@ -21,10 +23,14 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
+        val database = AppDatabase.getInstance(this)
+        val likeDao = database?.likeDao()
+        val movieRepository = MovieRepository(likeDao!!)
+
         val movieId = intent.getIntExtra("movieId", -1)
 
         val movieDetailsViewModel =
-            ViewModelProviders.of(this, MovieDetailsViewModelFactory(movieId))
+            ViewModelProviders.of(this, MovieDetailsViewModelFactory(movieId, movieRepository))
                 .get(MovieDetailsViewModel::class.java)
 
         movieDetailsViewModel.getMovie().observe(this, Observer { movie ->

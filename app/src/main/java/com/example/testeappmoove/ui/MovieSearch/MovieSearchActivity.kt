@@ -9,7 +9,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
+import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.Movie
+import com.example.testeappmoove.data.repositories.MovieRepository
 import com.example.testeappmoove.ui.MovieDetails.MovieDetailsActivity
 import kotlinx.android.synthetic.main.activity_search.*
 
@@ -20,8 +22,12 @@ class MovieSearchActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_search)
 
+        val database = AppDatabase.getInstance(this)
+        val likeDao = database?.likeDao()
+        val movieRepository = MovieRepository(likeDao!!)
+
         val movieSearchViewModel =
-            ViewModelProviders.of(this)
+            ViewModelProviders.of(this, MovieSearchActivityViewModelFactory( movieRepository))
                 .get(MovieSearchActivityViewModel::class.java)
 
         val onClick = { movie: Movie ->

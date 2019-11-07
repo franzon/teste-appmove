@@ -9,7 +9,11 @@ import com.example.testeappmoove.data.entities.Movie
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.movie_item.view.*
 
-class MoviesAdapter(private val movies: List<Movie>, val clickListener: (Movie) -> Unit) :
+class MoviesAdapter(
+    private val movies: List<Movie>,
+    val clickListener: (Movie) -> Unit,
+    val likeListener: (Movie) -> Unit
+) :
     RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
     override fun getItemCount() = movies.size
@@ -57,8 +61,9 @@ class MoviesAdapter(private val movies: List<Movie>, val clickListener: (Movie) 
         }
 
         holder.likeButton.setOnClickListener {
-            movie.liked = !movie.liked
-            notifyItemChanged(position)
+//            movie.liked = !movie.liked
+//            notifyItemChanged(position)
+            likeListener(movies[position])
         }
     }
 

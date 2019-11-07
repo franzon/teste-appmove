@@ -3,13 +3,16 @@ package com.example.testeappmoove.ui.PopularMovies
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testeappmoove.R
+import com.example.testeappmoove.data.database.AppDatabase
 import com.example.testeappmoove.data.entities.Movie
+import com.example.testeappmoove.data.repositories.MovieRepository
 import com.example.testeappmoove.ui.MovieDetails.MovieDetailsActivity
 import com.example.testeappmoove.ui.MovieSearch.MovieSearchActivity
 import kotlinx.android.synthetic.main.activity_popular_movies.*
@@ -19,22 +22,40 @@ class PopularMoviesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_popular_movies)
 
+
+        val database = AppDatabase.getInstance(this)
+        val likeDao = database?.likeDao()
+        val movieRepository = MovieRepository(likeDao!!)
+
+        val movieSearchViewModel =
+            ViewModelProviders.of(this, PopularMoviesViewModelFactory(movieRepository))
+                .get(PopularMoviesViewModel::class.java)
+
+        val movieDetailsViewModel =
+            ViewModelProviders.of(this)
+                .get(PopularMoviesViewModel::class.java)
+
         val onClick = { movie: Movie ->
             val intent = Intent(this, MovieDetailsActivity::class.java)
             intent.putExtra("movieId", movie.id)
             startActivity(intent)
         }
 
-        val movieDetailsViewModel =
-            ViewModelProviders.of(this)
-                .get(PopularMoviesViewModel::class.java)
+        val onLike = { movie: Movie ->
+            Log.d("Like", movie.toString())
+        }
+
+
 
         movieDetailsViewModel.getPopularMovies().observe(this, Observer { movies ->
             recyclerView.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(this@PopularMoviesActivity)
                 adapter =
-                    MoviesAdapter(movies.results) { movie -> onClick(movie) }
+                    MoviesAdapter(
+                        movies.results,
+                        clickListener = { movie -> onClick(movie) },
+                        likeListener = { movie -> onLike(movie) })
             }
         })
     }
